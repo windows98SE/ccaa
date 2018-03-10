@@ -1,3 +1,3 @@
-# ccaa : Crypto Currency API Abritrage
+# CCAA : Crypto Currency API Arbitrage
 
 beta version
