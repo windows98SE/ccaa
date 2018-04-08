@@ -30,23 +30,25 @@ class BX:
             self.coins = {}
 
     def get_orderbook(self, c):
-        pairing_id = self._get_pairing_id(c)
-        return get('https://bx.in.th/api/orderbook/?pairing=' + pairing_id)
+        return get('https://bx.in.th/api/orderbook/?pairing=' + self._get_pairing_id(c))
 
     def get_buy_rate(self, c, amount=1000, all_asks=0.0):
         content = self.get_orderbook(c)
-        for asks in content['asks']:
-            all_asks += float(simulate_ask(asks[0], asks[1]))
-            if all_asks > amount:
-                return asks[0]
+        if content:
+            for asks in content['asks']:
+                #print("{} {}".format(asks[0], asks[1]))
+                all_asks += float(simulate_ask(asks[0], asks[1]))
+                if all_asks > amount:
+                    return asks[0]
 
     def get_sell_rate(self, c, amount=1, all_bids=0.0):
         content = self.get_orderbook(c)
-        for bids in content['bids']:
-            print("{} {}".format(bids[0], bids[1]))
-            all_bids += float(simulate_ask(bids[0], bids[1]))
-            if all_bids > amount:
-                return bids[0]
+        if content:
+            for bids in content['bids']:
+                #print("{} {}".format(bids[0], bids[1]))
+                all_bids += float(simulate_bid(bids[0], bids[1]))
+                if all_bids > amount:
+                    return bids[0]
 
     '''
     Private API

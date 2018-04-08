@@ -34,19 +34,21 @@ class POLO:
 
     def get_buy_rate(self, c, amount=1000, all_asks=0.0):
         content = self.get_orderbook(c)
-        for asks in content['asks']:
-            print("{} {}".format(asks[0], asks[1]))
-            all_asks += float(simulate_ask(asks[0], asks[1]))
-            if all_asks > amount:
-                return asks[0]
+        if content:
+            for asks in content['asks']:
+                #print("{} {}".format(asks[0], asks[1]))
+                all_asks += float(simulate_ask(asks[0], asks[1]))
+                if all_asks > amount:
+                    return asks[0]
 
     def get_sell_rate(self, c, amount=1, all_bids=0.0):
         content = self.get_orderbook(c)
-        for bids in content['bids']:
-            print("{} {}".format(bids[0], bids[1]))
-            all_bids += float(simulate_ask(bids[0], bids[1]))
-            if all_bids > amount:
-                return bids[0]
+        if content:
+            for bids in content['bids']:
+                #print("{} {}".format(bids[0], bids[1]))
+                all_bids += float(simulate_bid(bids[0], bids[1]))
+                if all_bids > amount:
+                    return bids[0]
 
     '''
     Private API
@@ -122,7 +124,7 @@ class POLO:
             'usdt_xrp':127, 'usdt_eth':149, 'usdt_etc':173,
             'usdt_rep':175, 'usdt_zec':180, 'usdt_bch':191,
 
-            'btc_bcn': 7, 'btc_bela':8, 'btc_blk':10,
+            'btc_bcn':7, 'btc_bela':8, 'btc_blk':10,
             'btc_btcd':12, 'btc_btm': 13, 'btc_bts':14,
             'btc_burst':15, 'btc_clam':20, 'btc_dash':24,
             'btc_dgb':25, 'btc_doge':27, 'btc_emc2':28,
@@ -135,6 +137,7 @@ class POLO:
             'btc_via':97, 'btc_xvc':98, 'btc_vrc':99,
             'btc_xbc':104, 'btc_xcp':108, 'btc_xem':112,
             'btc_xmr':114, 'btc_xpm':116, 'btc_xrp':117,
+            'btc_eth':148,
 
             'eth_lsk':166, 'eth_steem':169, 'eth_etc':172,
             'eth_rep':176, 'eth_zec':179, 'eth_gnt':186,

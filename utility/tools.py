@@ -20,8 +20,7 @@ from requests import get as __get__
 
 DEFAULT_TIME_OUT = 4
 DEFAULT_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0',
-    'Content-Type': 'application/x-www-form-urlencoded'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'
 }
 
 getcontext().prec = 24
@@ -126,6 +125,7 @@ def get(u):
     return _get(build_requests(u))
 
 def post(u, d={}, h={}):
+    h.update({'Content-Type': 'application/x-www-form-urlencoded'})
     return _post(build_requests(u, d, h))
 
 def build_requests(u, d={}, h={}):
