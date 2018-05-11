@@ -93,16 +93,28 @@ def hmac_msg(input, secret, algorithm=hashlib.sha256, digest='hex'):
 Number Notation
 '''
 def simulate_buy(volume, rate, fee=0.25):
-    return format_float((Decimal(volume) / Decimal(rate)) * Decimal(simulate_fee(fee)))
+    if fee:
+        return format_float((Decimal(volume) / Decimal(rate)) * Decimal(simulate_fee(fee)))
+    else:
+        return format_float(Decimal(volume) / Decimal(rate))
 
 def simulate_sell(volume, rate, fee=0.25):
-    return format_float((Decimal(volume) * Decimal(rate)) * Decimal(simulate_fee(fee)))
+    if fee:
+        return format_float((Decimal(volume) * Decimal(rate)) * Decimal(simulate_fee(fee)))
+    else:
+        return format_float(Decimal(volume) * Decimal(rate))
 
 def simulate_bid(volume, rate):
     return format_float(Decimal(volume) / Decimal(rate))
 
 def simulate_ask(volume, rate):
     return format_float(Decimal(volume) * Decimal(rate))
+
+def simulate_rate(volume, rate):
+    return format_float(Decimal(volume) * Decimal(rate))
+
+def simulate_rate_fee(volume, rate, fee=0.25):
+    return format_float((Decimal(volume) * Decimal(rate)) * Decimal(simulate_fee(fee)))
 
 def simulate_fee(fee=0.25):
     return format_float((100.00 - fee) / 100.00)

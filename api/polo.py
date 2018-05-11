@@ -32,23 +32,34 @@ class POLO:
     def get_orderbook(self, c):
         return get('https://poloniex.com/public?command=returnOrderBook&currencyPair='+ str(c.upper()) +'&depth=30')
 
-    def get_buy_rate(self, c, amount=1000, all_asks=0.0):
+    def get_asks_rate(self, c, invert=1000, ret=0.0):
         content = self.get_orderbook(c)
         if content:
-            for asks in content['asks']:
-                #print("{} {}".format(asks[0], asks[1]))
-                all_asks += float(simulate_ask(asks[0], asks[1]))
-                if all_asks > amount:
-                    return asks[0]
+            for rate, volume in content['asks']:
+                sim_order = simulate_rate(volume, rate)
 
-    def get_sell_rate(self, c, amount=1, all_bids=0.0):
+                if Decimal(sim_order) > Decimal(invert):
+                    ret += float(simulate_buy(invert, rate))
+                    return format_float(ret)
+                else:
+                    sim_buy = simulate_buy(sim_order, rate)
+                    ret += float(sim_buy)
+                    invert -= float(sim_order)
+                #print("asks rate:{}, vol:{}, sim:({}) | inv:{}, ret:{}".format(rate, volume, sim_order, invert, ret))
+
+    def get_bids_rate(self, c, invert=1000, ret=0.0):
         content = self.get_orderbook(c)
         if content:
-            for bids in content['bids']:
-                #print("{} {}".format(bids[0], bids[1]))
-                all_bids += float(simulate_bid(bids[0], bids[1]))
-                if all_bids > amount:
-                    return bids[0]
+            for rate, volume in content['bids']:
+                sim_order = simulate_sell(volume, rate)
+
+                if Decimal(volume) > Decimal(invert):
+                    ret += float(simulate_sell(invert, rate))
+                    return format_float(ret)
+                else:
+                    ret += float(sim_order)
+                    invert = float(invert) - float(volume)
+                #print("bids rate:{}, vol:{}, sim:({})| inv:{}, ret:{}".format(rate, volume, sim_order, invert, ret))
 
     '''
     Private API
