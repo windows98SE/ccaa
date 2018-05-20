@@ -2,31 +2,31 @@
 # -*- encoding : utf-8 -*-
 
 # buy bx -> sell polo
-# buy btc, send btc, sell btc
+# buy eth, send eth, sell eth
 
 from init import *
 
 def run():
     invest = 100000
-    withdrawal_fee = 0.002
+    withdrawal_fee = 0.0005
 
-    exchange1 = 'thb_btc'
-    exchange2 = 'usdt_btc'
+    exchange1 = 'thb_eth'
+    exchange2 = 'usdt_eth'
 
     usdt_rate = 31.50
 
-    print("invest = {}".format(invest))
+    print("invest = {} thb".format(invest))
     buy_volume = BX().get_asks_rate(exchange1, invest)
-    print("buy_volume = {}".format(buy_volume))
+    print("{} thb = {} eth".format(invest, buy_volume))
     total_currency = format_float(Decimal(buy_volume) - Decimal(withdrawal_fee))
-    print("total volume = withdrawal fee (volume - {}) = {}".format(withdrawal_fee, total_currency))
+    print("total = withdrawal fee (volume - {}) = {} eth".format(withdrawal_fee, total_currency))
 
     #-------------
     print()
     #-------------
 
     sell_volume = POLO().get_bids_rate(exchange2, total_currency)
-    print("sell_volume = {}".format(sell_volume))
+    print("sell {} eth = {} usdt".format(buy_volume, sell_volume))
 
     #-------------
     print()

@@ -104,17 +104,24 @@ def simulate_sell(volume, rate, fee=0.25):
     else:
         return format_float(Decimal(volume) * Decimal(rate))
 
-def simulate_bid(volume, rate):
-    return format_float(Decimal(volume) / Decimal(rate))
+def simulate_asks(asks, invest, ret=0.0):
+    for rate, volume in asks:
+        simulate_order = Decimal(volume) * Decimal(rate)
+        if Decimal(invest) > Decimal(simulate_order):
+            ret = Decimal(ret) + Decimal(simulate_buy(simulate_order, rate))
+            invest = Decimal(invest) - Decimal(simulate_order)
+        else:
+            return format_float(Decimal(ret) + Decimal(simulate_buy(invest, rate)))
+        #print('asks', rate, volume, simulate_order, invest, ret)
 
-def simulate_ask(volume, rate):
-    return format_float(Decimal(volume) * Decimal(rate))
-
-def simulate_rate(volume, rate):
-    return format_float(Decimal(volume) * Decimal(rate))
-
-def simulate_rate_fee(volume, rate, fee=0.25):
-    return format_float((Decimal(volume) * Decimal(rate)) * Decimal(simulate_fee(fee)))
+def simulate_bids(bids, invest, ret=0.0):
+    for rate, volume in bids:
+        if Decimal(invest) > Decimal(volume):
+            ret = Decimal(ret) + Decimal(simulate_sell(volume, rate))
+            invest = Decimal(invest) - Decimal(volume)
+        else:
+            return format_float(Decimal(ret) + Decimal(simulate_sell(invest, rate)))
+        #print('bids', rate, volume, invest, ret)
 
 def simulate_fee(fee=0.25):
     return format_float((100.00 - fee) / 100.00)

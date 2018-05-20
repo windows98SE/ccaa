@@ -32,34 +32,15 @@ class POLO:
     def get_orderbook(self, c):
         return get('https://poloniex.com/public?command=returnOrderBook&currencyPair='+ str(c.upper()) +'&depth=30')
 
-    def get_asks_rate(self, c, invert=1000, ret=0.0):
+    def get_asks_rate(self, c, invest=1000):
         content = self.get_orderbook(c)
         if content:
-            for rate, volume in content['asks']:
-                sim_order = simulate_rate(volume, rate)
+            return simulate_asks(content['asks'], invest)
 
-                if Decimal(sim_order) > Decimal(invert):
-                    ret += float(simulate_buy(invert, rate))
-                    return format_float(ret)
-                else:
-                    sim_buy = simulate_buy(sim_order, rate)
-                    ret += float(sim_buy)
-                    invert -= float(sim_order)
-                #print("asks rate:{}, vol:{}, sim:({}) | inv:{}, ret:{}".format(rate, volume, sim_order, invert, ret))
-
-    def get_bids_rate(self, c, invert=1000, ret=0.0):
+    def get_bids_rate(self, c, invest=1000):
         content = self.get_orderbook(c)
         if content:
-            for rate, volume in content['bids']:
-                sim_order = simulate_sell(volume, rate)
-
-                if Decimal(volume) > Decimal(invert):
-                    ret += float(simulate_sell(invert, rate))
-                    return format_float(ret)
-                else:
-                    ret += float(sim_order)
-                    invert = float(invert) - float(volume)
-                #print("bids rate:{}, vol:{}, sim:({})| inv:{}, ret:{}".format(rate, volume, sim_order, invert, ret))
+            return simulate_bids(content['bids'], invest)
 
     '''
     Private API
