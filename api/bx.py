@@ -131,7 +131,7 @@ class BX:
 
             'btc_ltc': 2, 'btc_nmc': 3, 'btc_doge': 4, 'btc_ppc': 5, 'btc_ftc': 6,
             'btc_xpm': 7, 'btc_zec': 8, 'btc_hyp': 13, 'btc_pnd': 14, 'btc_xcn': 15,
-            'btc_xpy': 17, 'btc_qrk': 19, 'btc_eth': 20,
+            'btc_xpy': 17, 'btc_eth': 20,
 
             'thb_eth': 21, 'thb_das': 22, 'thb_rep': 23, 'thb_ngo': 24, 'thb_xrp': 25,
             'thb_omg': 26, 'thb_bch': 27, 'thb_evx': 28, 'thb_xzc': 29, 'thb_ltc': 30
