@@ -35,11 +35,32 @@ class BINANCE:
             self.ticker = []
             self.coins = {}
 
+    def get_orderbook(self, c):
+        return get('https://api.binance.com/api/v1/depth?limit=50&symbol=' + str(self._get_pairing_id(c)))
+
+    def get_asks_rate(self, c, invest=1000):
+        content = self.get_orderbook(c)
+        if content:
+            return simulate_asks(content['asks'], invest)
+
+    def get_bids_rate(self, c, invest=1000):
+        content = self.get_orderbook(c)
+        if content:
+            return simulate_bids(content['bids'], invest)
+
     # parser currency
     # todo add me plz >__<
+    # see symbol at : https://api.binance.com/api/v1/exchangeInfo
     def _pairing_list(self):
         return {
-            'BTCUSDT': 'usdt_btc', 'ETHUSDT': 'usdt_eth', 'NEOUSDT':'usdt_neo'
+            'usdt_btc': 'BTCUSDT',
+            'usdt_eth' : 'ETHUSDT',
+            'usdt_neo': 'NEOUSDT',
+
+            'eth_btc': 'ETHBTC',
+            'ltc_btc': 'LTCBTC',
+            'bnb_btc': 'BNBBTC',
+            'neo_btc': 'NEOBTC',
         }
 
     def _get_pairing_name(self):
@@ -58,6 +79,17 @@ class BINANCE:
     def get_coin(self, c):
         if c in self.coins:
             return self.coins[c]
+
+    '''
+    Utility
+    '''
+    # build signature
+    def _build_signature(self, d={}, h={}):
+        d['timestamp'] = nonce()
+        p = urlencode(d)
+        d['signature'] = hmac_msg(p, self._secret.encode('utf-8'), hashlib.sha256)
+        h['X-MBX-APIKEY'] = self._key
+        return p, h
 
     '''
     DEBUG
